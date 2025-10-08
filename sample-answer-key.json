@@ -1,0 +1,52 @@
+{
+  "1": {
+    "questionType": "MCQ",
+    "answer": "A",
+    "marks": 2
+  },
+  "2": {
+    "questionType": "MCQ",
+    "answer": "B",
+    "marks": 2
+  },
+  "3": {
+    "questionType": "MSQ",
+    "answer": "C",
+    "marks": 3
+  },
+  "4": {
+    "questionType": "INTEGER",
+    "answer": "42",
+    "marks": 4
+  },
+  "5": {
+    "questionType": "MCQ",
+    "answer": "D",
+    "marks": 2
+  },
+  "6": {
+    "questionType": "NUMERICAL",
+    "answer": "3.14",
+    "marks": 3
+  },
+  "7": {
+    "questionType": "MCQ",
+    "answer": "A",
+    "marks": 2
+  },
+  "8": {
+    "questionType": "MSQ",
+    "answer": "B",
+    "marks": 3
+  },
+  "9": {
+    "questionType": "INTEGER",
+    "answer": "100",
+    "marks": 4
+  },
+  "10": {
+    "questionType": "MCQ",
+    "answer": "C",
+    "marks": 2
+  }
+}

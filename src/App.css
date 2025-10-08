@@ -1,0 +1,277 @@
+.App {
+  min-height: 100vh;
+  color: white;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.upload-box {
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-box:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-box.dragover {
+  border-color: #4CAF50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.upload-text {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.upload-subtext {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.file-input {
+  display: none;
+}
+
+.paper-name-input {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.paper-name-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.save-btn {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.save-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saved-papers {
+  margin-top: 40px;
+}
+
+.papers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.paper-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.paper-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.paper-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.paper-info {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.file-preview {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  color: #4CAF50;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.json-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.json-method-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.method-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.method-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.method-btn.active {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.json-paste-area {
+  width: 100%;
+}
+
+.json-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 15px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.json-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Courier New', monospace;
+}
+
+.json-textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.json-textarea:valid {
+  border-color: rgba(76, 175, 80, 0.6);
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 2rem;
+  }
+
+  .upload-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .upload-box {
+    padding: 30px 15px;
+  }
+
+  .papers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .json-method-selector {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .method-btn {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
+
+  .json-textarea {
+    min-height: 150px;
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+}

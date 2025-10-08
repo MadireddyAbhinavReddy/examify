@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './QuizViewer.css';
+import { getPDFUrl } from '../lib/supabase';
 
 const QuizViewer = ({ quiz, onBack }) => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -15,30 +16,43 @@ const QuizViewer = ({ quiz, onBack }) => {
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        // Load PDF from localStorage
-        const pdfData = localStorage.getItem(`papers/${quiz.pdfFilename}`);
-        console.log('PDF filename:', quiz.pdfFilename);
-        console.log('PDF data found:', !!pdfData);
-        if (pdfData) {
-          const fileData = JSON.parse(pdfData);
-          console.log('PDF file data:', fileData);
-          setPdfUrl(fileData.data);
-        } else {
-          console.log('No PDF data found in localStorage');
-        }
+        // Load PDF from Supabase
+        console.log('Loading PDF from Supabase:', quiz.pdfFilename);
+        const pdfUrl = await getPDFUrl(quiz.pdfFilename);
+        console.log('PDF URL:', pdfUrl);
+        setPdfUrl(pdfUrl);
 
-        // Load answer key from localStorage
-        const keyData = localStorage.getItem(`keys/${quiz.jsonFilename}`);
-        if (keyData) {
-          const parsedKey = JSON.parse(keyData);
-          setAnswerKey(parsedKey);
+        // Answer key is already in the quiz object from Supabase
+        if (quiz.answerKey) {
+          setAnswerKey(quiz.answerKey);
+        } else {
+          console.error('No answer key found in quiz data');
         }
         
         setLoading(false);
       } catch (error) {
         console.error('Error loading quiz data:', error);
-        alert('Error loading quiz data');
-        onBack();
+        
+        // Fallback to localStorage for development
+        try {
+          const pdfData = localStorage.getItem(`papers/${quiz.pdfFilename}`);
+          if (pdfData) {
+            const fileData = JSON.parse(pdfData);
+            setPdfUrl(fileData.data);
+          }
+          
+          const keyData = localStorage.getItem(`keys/${quiz.jsonFilename}`);
+          if (keyData) {
+            const parsedKey = JSON.parse(keyData);
+            setAnswerKey(parsedKey);
+          }
+          
+          setLoading(false);
+        } catch (fallbackError) {
+          console.error('Fallback loading failed:', fallbackError);
+          alert('Error loading quiz data');
+          onBack();
+        }
       }
     };
 

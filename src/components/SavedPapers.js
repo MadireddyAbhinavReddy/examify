@@ -24,7 +24,7 @@ const SavedPapers = ({ papers, onOpenQuiz }) => {
           >
             <div className="paper-title">{paper.name}</div>
             <div className="paper-info">
-              📄 PDF: {paper.pdfFilename}
+              📄 PDF: {paper.pdfFilename || 'PDF file'}
             </div>
             <div className="paper-info">
               🔑 Questions: {paper.questionCount}

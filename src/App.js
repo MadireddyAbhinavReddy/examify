@@ -3,34 +3,42 @@ import './App.css';
 import UploadSection from './components/UploadSection';
 import SavedPapers from './components/SavedPapers';
 import QuizViewer from './components/QuizViewer';
+import { getPapers } from './lib/supabase';
 
 function App() {
   const [savedPapers, setSavedPapers] = useState([]);
   const [currentQuiz, setCurrentQuiz] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
 
-  // Load saved papers from localStorage on app start
+  // Load saved papers from Supabase on app start
   useEffect(() => {
-    const saved = localStorage.getItem('savedPapers');
-    if (saved) {
-      setSavedPapers(JSON.parse(saved));
-    }
+    const loadPapers = async () => {
+      try {
+        const papers = await getPapers();
+        const formattedPapers = papers.map(paper => ({
+          id: paper.id,
+          name: paper.name,
+          pdfFilename: paper.pdf_filename,
+          answerKey: paper.answer_key,
+          questionCount: paper.question_count,
+          createdAt: new Date(paper.created_at).toLocaleDateString()
+        }));
+        setSavedPapers(formattedPapers);
+      } catch (error) {
+        console.error('Error loading papers:', error);
+        // Fallback to localStorage for development
+        const saved = localStorage.getItem('savedPapers');
+        if (saved) {
+          setSavedPapers(JSON.parse(saved));
+        }
+      }
+    };
+    
+    loadPapers();
   }, []);
 
   const handleSavePaper = (paperData) => {
-    const newPaper = {
-      id: Date.now(),
-      name: paperData.name,
-      pdfFilename: paperData.pdfFilename,
-      jsonFilename: paperData.jsonFilename,
-      questionCount: paperData.questionCount,
-      createdAt: new Date().toLocaleDateString()
-    };
-    setSavedPapers([...savedPapers, newPaper]);
-    
-    // Also save to localStorage for persistence
-    const allPapers = [...savedPapers, newPaper];
-    localStorage.setItem('savedPapers', JSON.stringify(allPapers));
+    setSavedPapers([paperData, ...savedPapers]);
   };
 
   const handleOpenQuiz = (paper) => {

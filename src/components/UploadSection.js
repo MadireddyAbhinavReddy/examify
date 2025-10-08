@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { uploadPDF, savePaper } from '../lib/supabase';
 
 const UploadSection = ({ onSave }) => {
   const [pdfFile, setPdfFile] = useState(null);
@@ -59,28 +60,40 @@ const UploadSection = ({ onSave }) => {
     }
   };
 
-  const saveFileToFolder = async (file, folder, filename) => {
-    // In a real app, you'd save to server. For demo, we'll use localStorage
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const fileData = {
-          name: filename,
-          data: e.target.result,
-          type: file.type,
-          size: file.size
-        };
-        localStorage.setItem(`${folder}/${filename}`, JSON.stringify(fileData));
-        resolve(filename);
+  const saveToSupabase = async (pdfFile, answerKey, paperName) => {
+    try {
+      // Generate unique filename
+      const timestamp = Date.now();
+      const pdfFilename = `${paperName.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
+      
+      // Upload PDF to Supabase Storage
+      console.log('Uploading PDF to Supabase...');
+      await uploadPDF(pdfFile, pdfFilename);
+      
+      // Save paper data to Supabase Database
+      const paperData = {
+        name: paperName,
+        pdf_filename: pdfFilename,
+        answer_key: answerKey,
+        question_count: Object.keys(answerKey).length,
+        created_at: new Date().toISOString()
       };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const saveJsonToFolder = (jsonData, filename) => {
-    const jsonString = JSON.stringify(jsonData, null, 2);
-    localStorage.setItem(`keys/${filename}`, jsonString);
-    return filename;
+      
+      console.log('Saving paper data to database...');
+      const savedPaper = await savePaper(paperData);
+      
+      return {
+        id: savedPaper.id,
+        name: savedPaper.name,
+        pdfFilename: savedPaper.pdf_filename,
+        answerKey: savedPaper.answer_key,
+        questionCount: savedPaper.question_count,
+        createdAt: new Date(savedPaper.created_at).toLocaleDateString()
+      };
+    } catch (error) {
+      console.error('Error saving to Supabase:', error);
+      throw error;
+    }
   };
 
   const handleSave = async () => {
@@ -90,25 +103,10 @@ const UploadSection = ({ onSave }) => {
     }
 
     try {
-      // Generate unique filenames
-      const timestamp = Date.now();
-      const pdfFilename = `${paperName.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
-      const jsonFilename = `${paperName.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.json`;
-
-      // Save files
-      console.log('Saving PDF with filename:', pdfFilename);
-      await saveFileToFolder(pdfFile, 'papers', pdfFilename);
-      console.log('Saving JSON with filename:', jsonFilename);
-      saveJsonToFolder(answerKey, jsonFilename);
-      console.log('Files saved successfully');
-
-      onSave({
-        name: paperName,
-        pdfFilename: pdfFilename,
-        jsonFilename: jsonFilename,
-        answerKey: answerKey,
-        questionCount: Object.keys(answerKey).length
-      });
+      console.log('Saving to Supabase...');
+      const savedPaper = await saveToSupabase(pdfFile, answerKey, paperName);
+      
+      onSave(savedPaper);
 
       // Reset form
       setPdfFile(null);

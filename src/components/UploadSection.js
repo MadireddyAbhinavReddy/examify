@@ -66,9 +66,15 @@ const UploadSection = ({ onSave }) => {
       const timestamp = Date.now();
       const pdfFilename = `${paperName.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.pdf`;
       
+      console.log('🚀 Starting Supabase upload process...');
+      console.log('📄 PDF File:', pdfFile.name, 'Size:', pdfFile.size, 'bytes');
+      console.log('🔑 Answer Key:', Object.keys(answerKey).length, 'questions');
+      console.log('📝 Generated filename:', pdfFilename);
+      
       // Upload PDF to Supabase Storage
-      console.log('Uploading PDF to Supabase...');
-      await uploadPDF(pdfFile, pdfFilename);
+      console.log('📤 Uploading PDF to Supabase Storage...');
+      const uploadResult = await uploadPDF(pdfFile, pdfFilename);
+      console.log('✅ PDF Upload successful:', uploadResult);
       
       // Save paper data to Supabase Database
       const paperData = {
@@ -79,8 +85,10 @@ const UploadSection = ({ onSave }) => {
         created_at: new Date().toISOString()
       };
       
-      console.log('Saving paper data to database...');
+      console.log('💾 Saving paper metadata to database...');
+      console.log('📊 Paper data:', paperData);
       const savedPaper = await savePaper(paperData);
+      console.log('✅ Database save successful:', savedPaper);
       
       return {
         id: savedPaper.id,
@@ -91,7 +99,10 @@ const UploadSection = ({ onSave }) => {
         createdAt: new Date(savedPaper.created_at).toLocaleDateString()
       };
     } catch (error) {
-      console.error('Error saving to Supabase:', error);
+      console.error('❌ Error saving to Supabase:', error);
+      console.error('Error details:', error.message);
+      if (error.details) console.error('Error details:', error.details);
+      if (error.hint) console.error('Error hint:', error.hint);
       throw error;
     }
   };

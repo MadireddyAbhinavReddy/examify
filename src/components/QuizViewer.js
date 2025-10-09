@@ -16,6 +16,12 @@ const QuizViewer = ({ quiz, onBack }) => {
   const [zoomLevel, setZoomLevel] = useState(100);
 
   useEffect(() => {
+    // Ensure proper mobile viewport behavior
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+    }
+    
     const loadQuizData = async () => {
       try {
         // Load PDF from Supabase
@@ -284,7 +290,11 @@ const QuizViewer = ({ quiz, onBack }) => {
                 <div className="mobile-page-controls">
                   <button 
                     className="mobile-control-btn"
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    onTouchStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(Math.max(1, currentPage - 1));
+                    }}
                     disabled={currentPage <= 1}
                   >
                     ← Prev
@@ -292,7 +302,11 @@ const QuizViewer = ({ quiz, onBack }) => {
                   <span className="mobile-page-info">Page {currentPage}</span>
                   <button 
                     className="mobile-control-btn"
-                    onClick={() => setCurrentPage(currentPage + 1)}
+                    onTouchStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(currentPage + 1);
+                    }}
                   >
                     Next →
                   </button>
@@ -300,14 +314,22 @@ const QuizViewer = ({ quiz, onBack }) => {
                 <div className="mobile-zoom-controls">
                   <button 
                     className="mobile-control-btn"
-                    onClick={() => setZoomLevel(Math.max(50, zoomLevel - 25))}
+                    onTouchStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setZoomLevel(Math.max(50, zoomLevel - 25));
+                    }}
                   >
                     🔍-
                   </button>
                   <span className="mobile-zoom-info">{zoomLevel}%</span>
                   <button 
                     className="mobile-control-btn"
-                    onClick={() => setZoomLevel(Math.min(200, zoomLevel + 25))}
+                    onTouchStart={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setZoomLevel(Math.min(200, zoomLevel + 25));
+                    }}
                   >
                     🔍+
                   </button>
@@ -324,15 +346,24 @@ const QuizViewer = ({ quiz, onBack }) => {
                 style={{ border: 'none', borderRadius: '10px' }}
               />
               
-              {/* Mobile PDF with controls */}
-              <iframe
-                src={`${pdfUrl}#page=${currentPage}&zoom=${zoomLevel}`}
-                title="Quiz PDF"
-                className="pdf-iframe mobile-pdf"
-                width="100%"
-                height="calc(100% - 50px)"
-                style={{ border: 'none', borderRadius: '0 0 10px 10px' }}
-              />
+              {/* Mobile PDF with native gestures enabled */}
+              <div className="mobile-pdf-container">
+                <iframe
+                  key={`${currentPage}-${zoomLevel}`}
+                  src={`${pdfUrl}#page=${currentPage}&zoom=${zoomLevel}&view=FitH`}
+                  title="Quiz PDF"
+                  className="pdf-iframe mobile-pdf"
+                  width="100%"
+                  height="100%"
+                  style={{ 
+                    border: 'none', 
+                    borderRadius: '0 0 10px 10px',
+                    touchAction: 'pan-x pan-y pinch-zoom'
+                  }}
+                  allow="fullscreen"
+                  sandbox="allow-scripts allow-same-origin allow-forms"
+                />
+              </div>
             </>
           ) : (
             <div style={{ 

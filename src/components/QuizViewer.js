@@ -12,6 +12,8 @@ const QuizViewer = ({ quiz, onBack }) => {
   const [answerKey, setAnswerKey] = useState({});
   const [loading, setLoading] = useState(true);
   const [showQuestionNav, setShowQuestionNav] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   useEffect(() => {
     const loadQuizData = async () => {
@@ -277,23 +279,59 @@ const QuizViewer = ({ quiz, onBack }) => {
         <div className="pdf-viewer">
           {pdfUrl ? (
             <>
+              {/* Mobile-only PDF Controls */}
+              <div className="mobile-pdf-controls">
+                <div className="mobile-page-controls">
+                  <button 
+                    className="mobile-control-btn"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage <= 1}
+                  >
+                    ← Prev
+                  </button>
+                  <span className="mobile-page-info">Page {currentPage}</span>
+                  <button 
+                    className="mobile-control-btn"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    Next →
+                  </button>
+                </div>
+                <div className="mobile-zoom-controls">
+                  <button 
+                    className="mobile-control-btn"
+                    onClick={() => setZoomLevel(Math.max(50, zoomLevel - 25))}
+                  >
+                    🔍-
+                  </button>
+                  <span className="mobile-zoom-info">{zoomLevel}%</span>
+                  <button 
+                    className="mobile-control-btn"
+                    onClick={() => setZoomLevel(Math.min(200, zoomLevel + 25))}
+                  >
+                    🔍+
+                  </button>
+                </div>
+              </div>
+              
               {/* Desktop PDF with 150% zoom */}
               <iframe
                 src={`${pdfUrl}#zoom=150`}
                 title="Quiz PDF"
-                className="pdf-iframe desktop-pdf-zoom"
+                className="pdf-iframe desktop-pdf"
                 width="100%"
                 height="100%"
                 style={{ border: 'none', borderRadius: '10px' }}
               />
-              {/* Mobile PDF with normal zoom */}
+              
+              {/* Mobile PDF with controls */}
               <iframe
-                src={pdfUrl}
+                src={`${pdfUrl}#page=${currentPage}&zoom=${zoomLevel}`}
                 title="Quiz PDF"
-                className="pdf-iframe mobile-pdf-zoom"
+                className="pdf-iframe mobile-pdf"
                 width="100%"
-                height="100%"
-                style={{ border: 'none', borderRadius: '10px' }}
+                height="calc(100% - 50px)"
+                style={{ border: 'none', borderRadius: '0 0 10px 10px' }}
               />
             </>
           ) : (

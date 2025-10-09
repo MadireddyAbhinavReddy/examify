@@ -79,13 +79,68 @@
   border: none;
 }
 
-/* Desktop PDF with 150% zoom */
-.desktop-pdf-zoom {
+/* Desktop PDF - always visible on desktop */
+.desktop-pdf {
   display: block;
 }
 
-.mobile-pdf-zoom {
+/* Mobile PDF - hidden on desktop */
+.mobile-pdf {
   display: none;
+}
+
+/* Mobile PDF Controls - hidden on desktop */
+.mobile-pdf-controls {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 8px 15px;
+  border-radius: 10px 10px 0 0;
+  color: white;
+  font-size: 0.9rem;
+  height: 50px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+}
+
+.mobile-page-controls, .mobile-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-control-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mobile-control-btn:active {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0.95);
+}
+
+.mobile-control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mobile-page-info, .mobile-zoom-info {
+  font-weight: 600;
+  min-width: 60px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: white;
 }
 
 .answer-panel {
@@ -589,13 +644,38 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  /* Switch to normal zoom PDF on mobile */
-  .desktop-pdf-zoom {
+  /* Hide desktop PDF and show mobile PDF */
+  .desktop-pdf {
     display: none;
   }
   
-  .mobile-pdf-zoom {
+  .mobile-pdf {
     display: block;
+  }
+  
+  /* Show mobile controls */
+  .mobile-pdf-controls {
+    display: flex;
+  }
+  
+  .mobile-pdf-controls {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    height: 45px;
+  }
+  
+  .mobile-page-controls, .mobile-zoom-controls {
+    gap: 8px;
+  }
+  
+  .mobile-control-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .mobile-page-info, .mobile-zoom-info {
+    font-size: 0.7rem;
+    min-width: 50px;
   }
   .quiz-header {
     flex-direction: row;
@@ -637,6 +717,10 @@
     height: calc(100vh - 50px);
     gap: 5px;
     padding: 5px;
+  }
+  
+  .mobile-pdf {
+    height: calc(100% - 45px) !important;
   }
   
   .pdf-viewer {
@@ -764,6 +848,26 @@
 }
 
 @media (max-width: 480px) {
+  .mobile-pdf-controls {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    height: 40px;
+  }
+  
+  .mobile-page-controls, .mobile-zoom-controls {
+    gap: 6px;
+  }
+  
+  .mobile-control-btn {
+    padding: 3px 6px;
+    font-size: 0.65rem;
+  }
+  
+  .mobile-page-info, .mobile-zoom-info {
+    font-size: 0.65rem;
+    min-width: 45px;
+  }
+  
   .quiz-header {
     padding: 4px 8px;
   }
@@ -797,6 +901,10 @@
     gap: 3px;
     grid-template-rows: 75vh auto;
     height: calc(100vh - 40px);
+  }
+  
+  .mobile-pdf {
+    height: calc(100% - 40px) !important;
   }
   
   .answer-panel {
@@ -897,6 +1005,26 @@
 
 /* Ultra Mobile Optimization */
 @media (max-width: 360px) {
+  .mobile-pdf-controls {
+    padding: 3px 6px;
+    font-size: 0.65rem;
+    height: 35px;
+  }
+  
+  .mobile-page-controls, .mobile-zoom-controls {
+    gap: 4px;
+  }
+  
+  .mobile-control-btn {
+    padding: 2px 4px;
+    font-size: 0.6rem;
+  }
+  
+  .mobile-page-info, .mobile-zoom-info {
+    font-size: 0.6rem;
+    min-width: 40px;
+  }
+  
   .quiz-header {
     padding: 2px 5px;
   }
@@ -915,6 +1043,10 @@
     height: calc(100vh - 35px);
     padding: 2px;
     gap: 2px;
+  }
+  
+  .mobile-pdf {
+    height: calc(100% - 35px) !important;
   }
   
   .answer-panel {

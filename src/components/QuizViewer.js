@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './QuizViewer.css';
 import { getPDFUrl } from '../lib/supabase';
+import PDFViewer from './PDFViewer';
+import './PDFViewer.css';
 
 const QuizViewer = ({ quiz, onBack }) => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -12,8 +14,7 @@ const QuizViewer = ({ quiz, onBack }) => {
   const [answerKey, setAnswerKey] = useState({});
   const [loading, setLoading] = useState(true);
   const [showQuestionNav, setShowQuestionNav] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [zoomLevel, setZoomLevel] = useState(100);
+
 
   useEffect(() => {
     // Ensure proper mobile viewport behavior
@@ -283,101 +284,7 @@ const QuizViewer = ({ quiz, onBack }) => {
 
       <div className="quiz-content">
         <div className="pdf-viewer">
-          {pdfUrl ? (
-            <>
-              {/* Mobile-only PDF Controls */}
-              <div className="mobile-pdf-controls">
-                <div className="mobile-page-controls">
-                  <button 
-                    className="mobile-control-btn"
-                    onTouchStart={(e) => e.preventDefault()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(Math.max(1, currentPage - 1));
-                    }}
-                    disabled={currentPage <= 1}
-                  >
-                    ← Prev
-                  </button>
-                  <span className="mobile-page-info">Page {currentPage}</span>
-                  <button 
-                    className="mobile-control-btn"
-                    onTouchStart={(e) => e.preventDefault()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(currentPage + 1);
-                    }}
-                  >
-                    Next →
-                  </button>
-                </div>
-                <div className="mobile-zoom-controls">
-                  <button 
-                    className="mobile-control-btn"
-                    onTouchStart={(e) => e.preventDefault()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setZoomLevel(Math.max(50, zoomLevel - 25));
-                    }}
-                  >
-                    🔍-
-                  </button>
-                  <span className="mobile-zoom-info">{zoomLevel}%</span>
-                  <button 
-                    className="mobile-control-btn"
-                    onTouchStart={(e) => e.preventDefault()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setZoomLevel(Math.min(200, zoomLevel + 25));
-                    }}
-                  >
-                    🔍+
-                  </button>
-                </div>
-              </div>
-              
-              {/* Desktop PDF with 150% zoom */}
-              <iframe
-                src={`${pdfUrl}#zoom=150`}
-                title="Quiz PDF"
-                className="pdf-iframe desktop-pdf"
-                width="100%"
-                height="100%"
-                style={{ border: 'none', borderRadius: '10px' }}
-              />
-              
-              {/* Mobile PDF with native gestures enabled */}
-              <div className="mobile-pdf-container">
-                <iframe
-                  key={`${currentPage}-${zoomLevel}`}
-                  src={`${pdfUrl}#page=${currentPage}&zoom=${zoomLevel}&view=FitH`}
-                  title="Quiz PDF"
-                  className="pdf-iframe mobile-pdf"
-                  width="100%"
-                  height="100%"
-                  style={{ 
-                    border: 'none', 
-                    borderRadius: '0 0 10px 10px',
-                    touchAction: 'pan-x pan-y pinch-zoom'
-                  }}
-                  allow="fullscreen"
-                  sandbox="allow-scripts allow-same-origin allow-forms"
-                />
-              </div>
-            </>
-          ) : (
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              height: '100%',
-              background: 'rgba(255,255,255,0.1)',
-              color: 'white',
-              fontSize: '1rem'
-            }}>
-              📄 Loading PDF...
-            </div>
-          )}
+          <PDFViewer pdfUrl={pdfUrl} />
         </div>
 
         <div className="answer-panel">
